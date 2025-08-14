@@ -1,8 +1,9 @@
 const asyncHandler = require('express-async-handler');
+
 const Contact = require('../models/contactModel');
 //@desc Get all contacts
 //@route GET /api/contacts
-//@access Public
+//@access Private
 const getContacts = asyncHandler(async(req, res) => {
     const contacts = await Contact.find();
     //yaha par ham database se contacts ko fetch kar rahe hain
@@ -11,7 +12,7 @@ const getContacts = asyncHandler(async(req, res) => {
 
 //@desc Get single contact
 //@route GET /api/contacts/:id  
-//@access Public
+//@access Private
 const getContact = asyncHandler(async(req, res) => {
     const contact = await Contact.findById(req.params.id);
     //yaha par ham database se contact ko fetch kar rahe hain
@@ -25,7 +26,7 @@ const getContact = asyncHandler(async(req, res) => {
 
 //@desc Create New contact
 //@route POST /api/contacts
-//@access Public
+//@access Private
 const createContacts = asyncHandler(async(req, res) => {
     console.log("the body is:",req.body);
     //yaha par ham fields ko destructure kar sakte hain
@@ -48,7 +49,7 @@ const createContacts = asyncHandler(async(req, res) => {
 
 //@desc UPDATE contact
 //@route PUT /api/contacts/:id
-//@access Public
+//@access Private
 const updateContacts = asyncHandler(async(req, res) => {
     const contact = await Contact.findById(req.params.id);
     //yaha par ham database se contact ko fetch kar rahe hain
@@ -65,7 +66,7 @@ const updateContacts = asyncHandler(async(req, res) => {
 
 //@desc Delete contact
 //@route DELETE /api/contacts
-//@access Public
+//@access Private  
 const deleteContacts = asyncHandler(async(req, res) => {
     const contact = await Contact.findById(req.params.id);
     //yaha par ham database se contact ko fetch kar rahe hain

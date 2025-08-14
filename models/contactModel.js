@@ -1,6 +1,13 @@
 //mongoose object is used to interact with MongoDB
 const mongoose = require('mongoose');
 const contactSchema = mongoose.Schema({
+    // Defining the schema for the contact model
+    user_id:{
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User' // Reference to the User model
+        // This field is used to associate the contact with a specific user
+    },
     name: {
         type: String,
         required: [true,"Please enter your name"],
