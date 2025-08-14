@@ -5,7 +5,8 @@ const Contact = require('../models/contactModel');
 //@route GET /api/contacts
 //@access Private
 const getContacts = asyncHandler(async(req, res) => {
-    const contacts = await Contact.find();
+    const contacts = await Contact.find({user_id: req.user.id}); // Fetching contacts for the logged-in user
+    //req.user.id is set by the validateToken middleware, which extracts the user ID from the token
     //yaha par ham database se contacts ko fetch kar rahe hain
     res.status(200).json(contacts);
 });
@@ -41,7 +42,9 @@ const createContacts = asyncHandler(async(req, res) => {
     const contact = await Contact.create({
         name,
         email,
-        phone
+        phone,
+        user_id: req.user.id // Associate the contact with the logged-in user
+        //req.user.id is set by the validateToken middleware, which extracts the user ID from the token
     });
     res.status(201).json(contact);
     //201 status code means Created
@@ -56,6 +59,11 @@ const updateContacts = asyncHandler(async(req, res) => {
     if(!contact){
         res.status(404);
         throw new Error("Contact not found");
+    }
+
+    if(contact.user_id.toString() !== req.user.id) {
+        res.status(403);
+        throw new Error("User not authorized to update this contact");
     }
     const updatedContact = await Contact.findByIdAndUpdate(req.params.id, req.body, {
         new: true, // This option returns the modified document rather than the original
@@ -73,6 +81,10 @@ const deleteContacts = asyncHandler(async(req, res) => {
     if(!contact){
         res.status(404);
         throw new Error("Contact not found");
+    }
+    if(contact.user_id.toString() !== req.user.id) {
+        res.status(403);
+        throw new Error("User not authorized to delete this contact");
     }
     await Contact.findByIdAndDelete(req.params.id);
     res.status(204).json(contact);
